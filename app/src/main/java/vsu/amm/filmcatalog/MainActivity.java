@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +16,9 @@ import vsu.amm.filmcatalog.model.response.Film;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Toolbar toolbar;
+    private EditText searchEdit;
+    private ImageView searchClearBtn;
     private RecyclerView recyclerView;
     private FilmRecyclerAdapter recyclerAdapter;
 
@@ -21,7 +27,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initToolbar();
+        initResources();
         initRecyclerView();
+    }
+
+    private void initToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    private void initResources() {
+        searchEdit = (EditText) findViewById(R.id.search_edit_text);
+        searchClearBtn = (ImageView) findViewById(R.id.search_clear);
     }
 
     private void initRecyclerView() {

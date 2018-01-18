@@ -11,7 +11,7 @@
         android:id="@+id/recycler_film_poster"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/poster1" />
+        android:src="@drawable/poster2" />
 
     <LinearLayout
         android:layout_width="match_parent"
