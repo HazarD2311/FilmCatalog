@@ -1,12 +1,12 @@
 
-package vsu.amm.filmcatalog.model.response;
+package vsu.amm.filmcatalog.model;
 
 import java.util.List;
 
 
 import com.google.gson.annotations.SerializedName;
 
-public class Response {
+public class FilmResponse {
 
     @SerializedName("page")
     private Long mPage;

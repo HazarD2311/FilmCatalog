@@ -1,7 +1,12 @@
 
-package vsu.amm.filmcatalog.model.response;
+package vsu.amm.filmcatalog.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -108,8 +113,22 @@ public class Film {
         mPosterPath = posterPath;
     }
 
+    //public String getReleaseDate() {
+    //    return mReleaseDate;
+    //}
+
     public String getReleaseDate() {
-        return mReleaseDate;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date date = null;
+        try {
+            date = format.parse(mReleaseDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return mReleaseDate;
+        }
+        DateFormat newFormat = new SimpleDateFormat("dd MMMM yyyy", new Locale("ru"));
+        return newFormat.format(date);
     }
 
     public void setReleaseDate(String releaseDate) {

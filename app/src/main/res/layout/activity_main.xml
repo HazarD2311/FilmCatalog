@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context="vsu.amm.filmcatalog.MainActivity">
+    tools:context="vsu.amm.filmcatalog.mvp.MainActivity">
 
     <include
         android:id="@+id/main_toolbar"
@@ -14,5 +14,14 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_films"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_toolbar"/>
+
+    <ProgressBar
+        android:id="@+id/main_progress_bar"
+        style="@android:style/Widget.Material.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+</RelativeLayout>
