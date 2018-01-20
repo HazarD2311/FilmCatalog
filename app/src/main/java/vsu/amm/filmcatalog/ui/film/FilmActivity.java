@@ -1,7 +1,7 @@
-package vsu.amm.filmcatalog.mvp;
+package vsu.amm.filmcatalog.ui.film;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -9,87 +9,58 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
+
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import vsu.amm.filmcatalog.App;
-import vsu.amm.filmcatalog.Const;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import vsu.amm.filmcatalog.R;
-import vsu.amm.filmcatalog.adapter.FilmRecyclerAdapter;
-import vsu.amm.filmcatalog.model.Film;
-import vsu.amm.filmcatalog.model.FilmResponse;
-import vsu.amm.filmcatalog.mvp.interfaces.FilmView;
+import vsu.amm.filmcatalog.ui.film.adapter.FilmAdapter;
+import vsu.amm.filmcatalog.domain.Film;
 
-public class MainActivity extends AppCompatActivity implements FilmView {
+public class FilmActivity extends MvpAppCompatActivity implements FilmView {
 
-    private Toolbar toolbar;
-    private EditText searchEdit;
-    private ImageView searchClearBtn;
-    private ProgressBar progressBar;
-    private RecyclerView recyclerView;
-    private FilmRecyclerAdapter recyclerAdapter;
+    @InjectPresenter
+    FilmPresenter presenter;
 
-    private List<Film> films;
+    @BindView(R.id.main_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.search_edit_text)
+    EditText searchEdit;
+    @BindView(R.id.search_clear)
+    ImageView searchClearBtn;
+    @BindView(R.id.main_progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.recycler_films)
+    RecyclerView recyclerView;
+    @BindView(R.id.main_container)
+    RelativeLayout relativeLayout;
+
+    private FilmAdapter recyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_film);
 
-        initToolbar();
-        initResources();
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
         initRecyclerView();
 
-        getDiscoverFilms();
-    }
-
-    private void getDiscoverFilms() {
-        Call<FilmResponse> filmResponse = App.getInstanseApi().getDiscoverFilms(
-                Const.API_KEY,
-                Const.LANGUAGE,
-                "popularity.desc",
-                "false",
-                "false",
-                1);
-
-        filmResponse.enqueue(new Callback<FilmResponse>() {
-            @Override
-            public void onResponse(Call<FilmResponse> call, Response<FilmResponse> response) {
-                if (response.isSuccessful()) {
-                    films = response.body().getResults();
-                    progressBar.setVisibility(View.GONE);
-                    recyclerAdapter.update(films);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<FilmResponse> call, Throwable t) {
-
-            }
-        });
-
-    }
-
-    private void initToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(toolbar);
-    }
-
-    private void initResources() {
-        searchEdit = (EditText) findViewById(R.id.search_edit_text);
-        searchClearBtn = (ImageView) findViewById(R.id.search_clear);
-        progressBar = (ProgressBar) findViewById(R.id.main_progress_bar);
+        presenter.getDiscoverFilms();
+        //recyclerAdapter.update(getTestFilms());
     }
 
     private void initRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_films);
-//        recyclerAdapter = new FilmRecyclerAdapter(getTestFilms());
-        recyclerAdapter = new FilmRecyclerAdapter(films, this);
+//        recyclerAdapter = new FilmAdapter(getTestFilms());
+        recyclerAdapter = new FilmAdapter(this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
@@ -114,21 +85,25 @@ public class MainActivity extends AppCompatActivity implements FilmView {
 
     @Override
     public void showProgress() {
-
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void showResult(List<Film> films) {
-
+        recyclerAdapter.update(films);
     }
 
     @Override
     public void showSnack(String message) {
-
+        Snackbar.make(
+                relativeLayout,
+                message,
+                Snackbar.LENGTH_LONG)
+                .show();
     }
 }

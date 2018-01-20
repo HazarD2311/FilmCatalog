@@ -1,5 +1,5 @@
 
-package vsu.amm.filmcatalog.model;
+package vsu.amm.filmcatalog.domain;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Locale;
 
 import com.google.gson.annotations.SerializedName;
+
+import vsu.amm.filmcatalog.Const;
 
 public class Film {
 
@@ -127,7 +129,7 @@ public class Film {
             e.printStackTrace();
             return mReleaseDate;
         }
-        DateFormat newFormat = new SimpleDateFormat("dd MMMM yyyy", new Locale("ru"));
+        DateFormat newFormat = new SimpleDateFormat(Const.DATE_FORMAT, new Locale("ru"));
         return newFormat.format(date);
     }
 

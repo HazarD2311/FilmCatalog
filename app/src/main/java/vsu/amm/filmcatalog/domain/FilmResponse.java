@@ -1,5 +1,5 @@
 
-package vsu.amm.filmcatalog.model;
+package vsu.amm.filmcatalog.domain;
 
 import java.util.List;
 
