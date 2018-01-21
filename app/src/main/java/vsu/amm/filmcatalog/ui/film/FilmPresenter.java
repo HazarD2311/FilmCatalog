@@ -13,13 +13,14 @@ import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import vsu.amm.filmcatalog.Const;
 import vsu.amm.filmcatalog.app.App;
 import vsu.amm.filmcatalog.domain.Film;
 import vsu.amm.filmcatalog.domain.FilmResponse;
 import vsu.amm.filmcatalog.interactor.FilmInteract;
 
 @InjectViewState
-public class FilmPresenter extends MvpPresenter<FilmView> implements Observer<FilmResponse> {
+public class FilmPresenter extends MvpPresenter<FilmView> {
 
     @Inject
     FilmInteract interact;
@@ -35,23 +36,33 @@ public class FilmPresenter extends MvpPresenter<FilmView> implements Observer<Fi
         responseObservable.subscribeOn(Schedulers.newThread())
                 .toSingle()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this);
+                .subscribe(new Observer<FilmResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        getViewState().hideProgress();
+                        getViewState().hideError();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getViewState().hideProgress();
+                        getViewState().showError();
+                    }
+
+                    @Override
+                    public void onNext(FilmResponse filmResponse) {
+                        List<Film> films = filmResponse.getResults();
+                        getViewState().showResult(films);
+                    }
+                });
     }
 
-    @Override
-    public void onCompleted() {
-
-    }
-
-    @Override
-    public void onError(Throwable e) {
-
-    }
-
-    @Override
-    public void onNext(FilmResponse filmResponse) {
-        List<Film> films = filmResponse.getResults();
-        getViewState().hideProgress();
-        getViewState().showResult(films);
+    public void updateFilms(boolean searchIsEmpty) {
+        if (searchIsEmpty) {
+            getViewState().showProgress();
+            getDiscoverFilms();
+        } else {
+            //TODO обновление при введенном тексте в строку поиск
+        }
     }
 }

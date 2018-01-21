@@ -14,4 +14,7 @@ public class Const {
     public static final String LANGUAGE = "ru-RU";
     public static final String DATE_FORMAT = "dd MMMM yyyy";
 
+    public static final String ERROR_MESSAGE = "Проверьте ваше интернет соединение и попробуйте ещё раз";
+
+
 }

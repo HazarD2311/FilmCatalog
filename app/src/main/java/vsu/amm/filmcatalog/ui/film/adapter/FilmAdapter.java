@@ -57,4 +57,8 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmViewHolder> {
         this.notifyDataSetChanged();
     }
 
+    public Boolean isListEmpty() {
+        return films.isEmpty();
+    }
+
 }
