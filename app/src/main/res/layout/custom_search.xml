@@ -27,6 +27,7 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:hint="@string/search_hint"
+        android:maxLines="1"
         android:textSize="15sp" />
 
     <ImageView

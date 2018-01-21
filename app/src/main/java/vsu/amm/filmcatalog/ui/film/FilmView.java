@@ -13,19 +13,14 @@ import vsu.amm.filmcatalog.domain.Film;
 public interface FilmView extends MvpView {
 
     void showResult(List<Film> films);
+    void showResultTextChange(String text);
 
     void showProgress();
-
     void hideProgress();
-
     void showSnack(String message);
-
     void showError();
-
     void hideError();
-
     void showNotFound(String filmNotFound);
-
     void hideNotFound();
 
 }

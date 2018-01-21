@@ -70,51 +70,38 @@ public class FilmActivity extends MvpAppCompatActivity implements FilmView {
         setSupportActionBar(toolbar);
         initRecyclerView();
         initSwipeRefresh();
+        initFab();
 
         presenter.getDiscoverFilms();
-        //recyclerAdapter.update(getTestFilms());
-    }
-
-    private void initSwipeRefresh() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                hideError();
-                showProgress();
-                presenter.updateFilms(searchEdit.getText().toString().equals(""));
-            }
-        });
-
+        presenter.textChangeListener(searchEdit);
     }
 
     private void initRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_films);
-        //recyclerAdapter = new FilmAdapter(getTestFilms());
         recyclerAdapter = new FilmAdapter(this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
     }
 
-    private List<Film> getTestFilms() {
-        List<Film> films = new ArrayList<>();
-        Film film = new Film();
-        film.setTitle("Оно");
-        film.setOverview("Когда в городке Дерри, штат Мэн, начинают пропадать дети, несколько ребят сталкиваются со своими величайшими страхами и вынуждены помериться силами со злобным клоуном Пеннивайзом, чьи проявления жестокости и список жертв уходят в глубь веков.");
-        film.setReleaseDate("5 сентября 2017");
-        films.add(film);
+    private void initSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(this::refresh);
 
-        Film film2 = new Film();
-        film2.setTitle("Джуманджи: Зов Джунглей");
-        film2.setOverview("Когда в городке Дерри, штат Мэн, начинают пропадать дети, несколько ребят сталкиваются со своими величайшими страхами и вынуждены помериться силами со злобным клоуном Пеннивайзом, чьи проявления жестокости и список жертв уходят в глубь веков.");
-        film2.setReleaseDate("5 сентября 2017");
-        films.add(film2);
+    }
 
-        return films;
+    private void initFab() {
+        fabRefresh.setOnClickListener(v -> refresh());
+    }
+
+    private void refresh() {
+        hideError();
+        showProgress();
+        presenter.updateFilms(searchEdit.getText().toString());
     }
 
     @Override
     public void showProgress() {
+        hideNotFound();
         if (recyclerAdapter.isListEmpty())
             progressBar.setVisibility(View.VISIBLE);
         else
@@ -134,6 +121,11 @@ public class FilmActivity extends MvpAppCompatActivity implements FilmView {
     }
 
     @Override
+    public void showResultTextChange(String text) {
+        presenter.getFilmsByName(text);
+    }
+
+    @Override
     public void showSnack(String message) {
         Snackbar.make(
                 relativeLayout,
@@ -144,6 +136,7 @@ public class FilmActivity extends MvpAppCompatActivity implements FilmView {
 
     @Override
     public void showError() {
+        hideNotFound();
         if (recyclerAdapter.isListEmpty()) {
             fabRefresh.setVisibility(View.VISIBLE);
             errorMessageContainer.setVisibility(View.VISIBLE);
@@ -161,6 +154,8 @@ public class FilmActivity extends MvpAppCompatActivity implements FilmView {
     @Override
     public void showNotFound(String filmNotFound) {
         //TODO сделать вставку не найденного фильма в TextView: tvNotFound (...$s...)
+        //String sourceString = getResources().getString(R.string.not_found);
+        //tvNotFound.setText(String.format(sourceString, filmNotFound));
         notFoundContainer.setVisibility(View.VISIBLE);
     }
 

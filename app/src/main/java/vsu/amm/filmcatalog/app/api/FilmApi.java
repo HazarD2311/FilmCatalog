@@ -15,4 +15,11 @@ public interface FilmApi {
                                               @Query("include_adult") String include_adult,
                                               @Query("include_video") String include_video,
                                               @Query("page") int page);
+
+    @GET("search/movie")
+    Observable<FilmResponse> getFilmsFilteredByName(@Query("api_key") String api_key,
+                                                    @Query("language") String language,
+                                                    @Query("query") String sort_by,
+                                                    @Query("include_adult") String include_adult,
+                                                    @Query("page") int page);
 }

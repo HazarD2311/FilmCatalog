@@ -4,14 +4,14 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import vsu.amm.filmcatalog.interactor.FilmInteract;
+import vsu.amm.filmcatalog.interactor.FilmRepository;
 
 @Module
 public class InteractModule {
 
     @Provides
     @Singleton
-    public FilmInteract provideFilmInteract() {
-        return new FilmInteract();
+    public FilmRepository provideFilmInteract() {
+        return new FilmRepository();
     }
 }
