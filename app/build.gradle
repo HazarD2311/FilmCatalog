@@ -55,6 +55,8 @@ dependencies {
     compile 'com.arello-mobile:moxy:1.5.2'
     compile 'com.arello-mobile:moxy-app-compat:1.5.2'
     annotationProcessor 'com.arello-mobile:moxy-compiler:1.5.2'
+    //OrmLite
+    compile 'com.j256.ormlite:ormlite-android:4.48'
 
 
     testCompile 'junit:junit:4.12'

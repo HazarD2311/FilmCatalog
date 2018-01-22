@@ -6,7 +6,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import java.util.List;
 
-import vsu.amm.filmcatalog.Const;
 import vsu.amm.filmcatalog.domain.Film;
 
 @StateStrategyType(AddToEndSingleStrategy.class)
@@ -18,6 +17,7 @@ public interface FilmView extends MvpView {
     void showProgress();
     void hideProgress();
     void showSnack(String message);
+    void changeFavouriteImage(int position);
     void showError();
     void hideError();
     void showNotFound(String filmNotFound);

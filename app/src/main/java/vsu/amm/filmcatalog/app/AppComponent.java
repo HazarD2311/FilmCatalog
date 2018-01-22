@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import vsu.amm.filmcatalog.app.module.ContextModule;
+import vsu.amm.filmcatalog.app.module.DBModule;
 import vsu.amm.filmcatalog.app.module.HttpModule;
 import vsu.amm.filmcatalog.app.module.InteractModule;
 import vsu.amm.filmcatalog.interactor.FilmRepository;
@@ -16,7 +17,8 @@ import vsu.amm.filmcatalog.ui.film.FilmPresenter;
 @Component(modules = {
         InteractModule.class,
         ContextModule.class,
-        HttpModule.class
+        HttpModule.class,
+        DBModule.class
 })
 public interface AppComponent {
 

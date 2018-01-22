@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import vsu.amm.filmcatalog.Const;
+import vsu.amm.filmcatalog.utils.Const;
 import vsu.amm.filmcatalog.R;
 import vsu.amm.filmcatalog.domain.Film;
 
@@ -19,10 +19,13 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmViewHolder> {
 
     private List<Film> films;
     private Context context;
+    private OnClickFilmListener clickListener;
 
-    public FilmAdapter(Context context) {
+    public FilmAdapter(Context context,
+                       FilmAdapter.OnClickFilmListener clickListener) {
         this.films = new ArrayList<>();
         this.context = context;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -37,11 +40,20 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmViewHolder> {
         holder.title.setText(film.getTitle());
         holder.overview.setText(film.getOverview());
         holder.releaseDate.setText(film.getReleaseDate());
+        if (film.isFavourite()) {
+            holder.favourite.setImageDrawable(context.getDrawable(R.drawable.ic_heart_fill));
+        } else {
+            holder.favourite.setImageDrawable(context.getDrawable(R.drawable.ic_heart));
+        }
         Glide
                 .with(context)
                 .load(Const.IMAGE_BASE_URL + film.getPosterPath())
                 .into(holder.poster);
 
+        if (clickListener != null) {
+            holder.itemView.setOnClickListener(v -> clickListener.onClickFilm(film, position));
+            holder.favourite.setOnClickListener(v -> clickListener.onFavouriteClick(film, position));
+        }
     }
 
     @Override
@@ -57,8 +69,18 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmViewHolder> {
         this.notifyDataSetChanged();
     }
 
+    public void changeFavouriteImage(int position) {
+        films.get(position).reverseFavourite();
+        notifyItemChanged(position);
+    }
+
     public Boolean isListEmpty() {
         return films.isEmpty();
     }
 
+    public interface OnClickFilmListener {
+        void onClickFilm(Film film, int position);
+
+        void onFavouriteClick(Film film, int position);
+    }
 }

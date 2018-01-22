@@ -7,7 +7,7 @@ import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import vsu.amm.filmcatalog.Const;
+import vsu.amm.filmcatalog.utils.Const;
 import vsu.amm.filmcatalog.app.api.FilmApi;
 
 @Module

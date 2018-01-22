@@ -10,7 +10,7 @@ import java.util.Locale;
 
 import com.google.gson.annotations.SerializedName;
 
-import vsu.amm.filmcatalog.Const;
+import vsu.amm.filmcatalog.utils.Const;
 
 public class Film {
 
@@ -42,6 +42,7 @@ public class Film {
     private Double mVoteAverage;
     @SerializedName("vote_count")
     private Long mVoteCount;
+    private boolean favourite = false;
 
     public Boolean getAdult() {
         return mAdult;
@@ -169,4 +170,15 @@ public class Film {
         mVoteCount = voteCount;
     }
 
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean isFavourite) {
+        this.favourite = isFavourite;
+    }
+
+    public void reverseFavourite() {
+        this.favourite = !this.favourite;
+    }
 }

@@ -85,7 +85,7 @@
                 android:textStyle="normal" />
 
             <ImageView
-                android:id="@+id/recycler_film_heart"
+                android:id="@+id/recycler_film_favourite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

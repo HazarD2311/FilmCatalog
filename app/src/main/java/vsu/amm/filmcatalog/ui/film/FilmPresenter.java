@@ -6,6 +6,7 @@ import android.widget.TextView;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,9 +16,11 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import vsu.amm.filmcatalog.app.App;
+import vsu.amm.filmcatalog.domain.FavouriteFilm;
 import vsu.amm.filmcatalog.domain.Film;
 import vsu.amm.filmcatalog.domain.FilmResponse;
 import vsu.amm.filmcatalog.interactor.FilmRepository;
+import vsu.amm.filmcatalog.utils.FavouriteUtil;
 
 @InjectViewState
 public class FilmPresenter extends MvpPresenter<FilmView> {
@@ -71,10 +74,49 @@ public class FilmPresenter extends MvpPresenter<FilmView> {
                         if (filmResponse.getTotalResults() == 0) {
                             getViewState().showNotFound(searchFilm);
                         }
-                        List<Film> films = filmResponse.getResults();
-                        getViewState().showResult(films);
+                        checkFavourites(filmResponse.getResults());
+                        //getViewState().showResult(filmResponse.getResults());
                     }
                 });
+    }
+
+
+    private void checkFavourites(List<Film> results) {
+        repository.getFavouriteFilms()
+                .toSingle()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<FavouriteFilm>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getViewState().showSnack(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<FavouriteFilm> favouriteFilms) {
+                        try {
+                            FavouriteUtil favouriteUtil = new FavouriteUtil(favouriteFilms, results);
+                            favouriteUtil.mapFilms();
+                            getViewState().showResult(favouriteUtil.getFilms());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    public void saveFavourite(FavouriteFilm favouriteFilm) throws SQLException {
+        repository.addFavouriteFilm(favouriteFilm);
+    }
+
+    public void deleteFavourite(Long filmId) throws SQLException {
+        FavouriteFilm favouriteFilm = repository.findFavouriteByFilmId(filmId);
+        repository.deleteFavouriteFilm(favouriteFilm);
     }
 
     public void textChangeListener(TextView textView) {

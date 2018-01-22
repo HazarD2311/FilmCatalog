@@ -18,13 +18,16 @@ import android.widget.TextView;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import vsu.amm.filmcatalog.Const;
+import vsu.amm.filmcatalog.domain.FavouriteFilm;
+import vsu.amm.filmcatalog.utils.Const;
 import vsu.amm.filmcatalog.R;
 import vsu.amm.filmcatalog.ui.film.adapter.FilmAdapter;
 import vsu.amm.filmcatalog.domain.Film;
@@ -78,7 +81,33 @@ public class FilmActivity extends MvpAppCompatActivity implements FilmView {
 
     private void initRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_films);
-        recyclerAdapter = new FilmAdapter(this);
+        recyclerAdapter = new FilmAdapter(
+                this,
+                new FilmAdapter.OnClickFilmListener() {
+                    @Override
+                    public void onClickFilm(Film film, int position) {
+                        showSnack(film.getTitle());
+                    }
+
+                    @Override
+                    public void onFavouriteClick(Film film, int position) {
+                        if (!film.isFavourite()) {
+                            try {
+                                presenter.saveFavourite(new FavouriteFilm(film.getId(), film.getTitle()));
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                presenter.deleteFavourite(film.getId());
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        recyclerAdapter.changeFavouriteImage(position);
+                    }
+                }
+        );
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
@@ -132,6 +161,11 @@ public class FilmActivity extends MvpAppCompatActivity implements FilmView {
                 message,
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    @Override
+    public void changeFavouriteImage(int position) {
+        recyclerAdapter.changeFavouriteImage(position);
     }
 
     @Override
