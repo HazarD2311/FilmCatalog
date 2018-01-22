@@ -18,11 +18,20 @@ public class FavouriteFilmDAO extends BaseDaoImpl<FavouriteFilm, Integer> {
         super(connectionSource, data);
     }
 
+    /**
+     * выгружает из базы все избранные фильмы
+     * @return список с избранными фильмами
+     */
     public Observable<List<FavouriteFilm>> getAllFavouriteFilms() {
         return Observable.fromCallable(FavouriteFilmDAO.this::queryForAll)
                 .compose(new AsyncTransformer<>());
     }
 
+    /**
+     * добавляет в базу избранный фильм
+     * @param favouriteFilm
+     * @throws SQLException
+     */
     public void addFavouriteFilm(FavouriteFilm favouriteFilm) throws SQLException {
         FavouriteFilmDAO.this.callBatchTasks(new Callable<Void>() {
             @Override
@@ -33,6 +42,11 @@ public class FavouriteFilmDAO extends BaseDaoImpl<FavouriteFilm, Integer> {
         });
     }
 
+    /**
+     * удаляет избранный фильм из базы
+     * @param favouriteFilm
+     * @throws SQLException
+     */
     public void deleteFavouriteFilm(FavouriteFilm favouriteFilm) throws SQLException {
         FavouriteFilmDAO.this.callBatchTasks(new Callable<Void>() {
             @Override
@@ -43,6 +57,13 @@ public class FavouriteFilmDAO extends BaseDaoImpl<FavouriteFilm, Integer> {
         });
     }
 
+    /**
+     * поиск избранного фильма по film_id
+     * id не собственный (сгенерированный orm), а пришедший с сервера
+     * @param id
+     * @return избранный фильм
+     * @throws SQLException
+     */
     public FavouriteFilm findFavouriteByFilmId(Long id) throws SQLException {
         return FavouriteFilmDAO.this
                 .queryBuilder()

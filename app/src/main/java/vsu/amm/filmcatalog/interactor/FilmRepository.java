@@ -67,6 +67,7 @@ public class FilmRepository {
         );
     }
 
+
     public Observable<List<FavouriteFilm>> getFavouriteFilms() {
         return favouriteFilmDAO.getAllFavouriteFilms();
     }

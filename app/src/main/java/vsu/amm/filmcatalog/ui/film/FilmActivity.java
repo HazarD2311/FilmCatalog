@@ -22,8 +22,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vsu.amm.filmcatalog.domain.FavouriteFilm;
@@ -187,9 +185,8 @@ public class FilmActivity extends MvpAppCompatActivity implements FilmView {
 
     @Override
     public void showNotFound(String filmNotFound) {
-        //TODO сделать вставку не найденного фильма в TextView: tvNotFound (...$s...)
-        //String sourceString = getResources().getString(R.string.not_found);
-        //tvNotFound.setText(String.format(sourceString, filmNotFound));
+        String sourceString = getResources().getString(R.string.not_found);
+        tvNotFound.setText(String.format(sourceString, filmNotFound));
         notFoundContainer.setVisibility(View.VISIBLE);
     }
 
